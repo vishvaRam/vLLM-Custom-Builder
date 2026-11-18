@@ -1,0 +1,38 @@
+==============================================
+Building git
+==============================================
+# 1. Clone your fresh fork
+git clone https://github.com/vishvaRam/vllm.git
+cd vllm
+
+# 2. Add upstream vLLM and Mlight7's fork as remotes
+git remote add upstream https://github.com/vllm-project/vllm.git
+git remote add mlight7 https://github.com/Mlight7/vllm.git
+
+# 3. Fetch latest main from upstream and the PR branch from Mlight7
+git fetch upstream main
+git fetch mlight7 feat/systemone-generative-box
+
+# 4. Create the local branch from Mlight7's PR and rebase it cleanly onto upstream/main
+git checkout -B feat/systemone-generative-box mlight7/feat/systemone-generative-box
+git rebase upstream/main
+
+# 5. Push the clean branch to your fork
+git push -u origin feat/systemone-generative-box
+
+==============================================
+Updating to the latest
+==============================================
+
+git fetch upstream main
+git fetch mlight7 feat/systemone-generative-box
+
+git checkout main
+git reset --hard upstream/main
+git push origin main --force-with-lease
+
+git checkout -B feat/systemone-generative-box mlight7/feat/systemone-generative-box
+git rebase upstream/main
+git push origin feat/systemone-generative-box --force-with-lease
+
+============================================== 
