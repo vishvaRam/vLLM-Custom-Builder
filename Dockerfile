@@ -31,11 +31,12 @@ RUN uv venv /workspace/.venv --python python3.12
 RUN uv pip install setuptools-scm setuptools_rust wheel ninja
 
 # Step 3: Clone your rebased feature branch
-RUN git clone -b feat/systemone-generative-box https://github.com/vishvaRam/vllm.git /workspace/vllm
+RUN git clone --depth 1 -b feat/systemone-generative-box https://github.com/vishvaRam/vllm.git /workspace/vllm
 
-# Step 4: Install vLLM in editable mode using pre-compiled binaries + cu130 backend
+# Step 4: Install compatible cu130 PyTorch, relax torch* pins in cuda.txt, and install vLLM
 WORKDIR /workspace/vllm
-RUN VLLM_USE_PRECOMPILED=1 uv pip install --editable .
+RUN sed -i '/^torchaudio/d; s/^torchvision==.*/torchvision/' requirements/cuda.txt && \
+    VLLM_USE_PRECOMPILED=1 uv pip install --editable .
 
 # Step 5: Verify installation points to the cloned repository and CUDA PyTorch is loaded
 WORKDIR /workspace
